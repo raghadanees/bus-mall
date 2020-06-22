@@ -21,6 +21,8 @@
 var productsSection = document.getElementById('all_products');
 var allProducts = [];
 var totalClicks = 0;
+var productsName = [];
+
 
 var leftImage = document.getElementById('left_product_img');
 var middleImage = document.getElementById('middle_product_img');
@@ -40,6 +42,7 @@ function ProductPicture(name, url) {
   this.numberOfClicks = 0;
   this.timesShown = 0;
   allProducts.push(this);
+  productsName.push(this.name);
 }
 
 new ProductPicture('bag', 'images/bag.jpg');
@@ -70,10 +73,10 @@ new ProductPicture('wine-glass', 'images/wine-glass.jpg');
 // all products [img1, img2, img3, img4,......., img20]
 function displayRandomImages() {
 
-  var forbiddenIndex=[];
+  var forbiddenIndex = [];
 
-  if(totalClicks > 0){
-    forbiddenIndex = [previousLeftImageIndex, previousrightImageIndex , previousMiddleImageIndex];
+  if (totalClicks > 0) {
+    forbiddenIndex = [previousLeftImageIndex, previousrightImageIndex, previousMiddleImageIndex];
   }
 
   var leftIndex = generateRandomNumber(forbiddenIndex);
@@ -82,7 +85,7 @@ function displayRandomImages() {
   forbiddenIndex.push(middleIndex);
   var rightIndex = generateRandomNumber(forbiddenIndex);
   forbiddenIndex.push(rightIndex);
-  
+
 
 
   previousLeftImageIndex = leftIndex;
@@ -111,15 +114,15 @@ function generateRandomNumber(forbiddenIndex) {
   var allowed;
   var randomNumber;
 
-  do{
+  do {
     randomNumber = Math.floor(Math.random() * allProducts.length);
     allowed = true;
-    for(var i = 0; i < forbiddenIndex.length ; i++){
-      if(forbiddenIndex[i] === randomNumber){
+    for (var i = 0; i < forbiddenIndex.length; i++) {
+      if (forbiddenIndex[i] === randomNumber) {
         allowed = false;
       }
     }
-  } while(!allowed);
+  } while (!allowed);
 
   return randomNumber;
 }
@@ -148,21 +151,113 @@ function handleProductClick(event) {
         currentRightImage.numberOfClicks += 1;
       }
 
-     
+
 
       displayRandomImages();
     }
-  }else {
+  } else {
     // add a code to display results
     var resultsList = document.getElementById('finalResult');
 
     for (var i = 0; i < allProducts.length; i++) {
       var listItem = document.createElement('li');
       listItem.textContent = allProducts[i].name + ' had ' + allProducts[i].numberOfClicks + ' votes , and was shown ' + allProducts[i].timesShown + ' times';
-      resultsList.appendChild(listItem);
+      //resultsList.appendChild(listItem);
     }
+
+    drawResultChart()
 
     productsSection.removeEventListener('click', handleProductClick);
   }
 }
 
+
+//...............................
+
+
+
+
+function drawResultChart() {
+
+  var allClicks = [];
+  for (var i = 0; i < allProducts.length; i++) {
+    allClicks.push(allProducts[i].numberOfClicks);
+  }
+
+  console.log(allClicks);
+
+  var allTimesShown = [];
+  for (var i = 0; i < allProducts.length; i++) {
+    allTimesShown.push(allProducts[i].timesShown);
+    //console.log(allTimesShown);
+  }
+
+  
+  
+
+  var ctx = document.getElementById('myChart')//.getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: productsName,
+      datasets: [{
+        label: '# of Clicks',
+        data: allClicks,
+        backgroundColor: "#da84c4",
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+        ],
+        borderWidth: 1
+      },
+      {
+        label: ' # of times shown',
+        data: allTimesShown,
+        backgroundColor: "#9f6ed8",
+        // backgroundColor: [
+        //   'rgba(255, 99, 132, 0.2)',
+        //   'rgba(54, 162, 235, 0.2)',
+        //   'rgba(255, 206, 86, 0.2)',
+        //   'rgba(75, 192, 192, 0.2)',
+        //   'rgba(153, 102, 255, 0.2)',
+        //   'rgba(255, 159, 64, 0.2)',
+        //   'rgba(255, 99, 132, 0.2)',
+        //   'rgba(54, 162, 235, 0.2)',
+        //   'rgba(255, 206, 86, 0.2)',
+        //   'rgba(75, 192, 192, 0.2)',
+        //   'rgba(153, 102, 255, 0.2)',
+        //   'rgba(255, 159, 64, 0.2)',
+        //   'rgba(255, 99, 132, 0.2)',
+        //   'rgba(54, 162, 235, 0.2)',
+        //   'rgba(255, 206, 86, 0.2)',
+        //   'rgba(75, 192, 192, 0.2)',
+        //   'rgba(153, 102, 255, 0.2)',
+        //   'rgba(255, 159, 64, 0.2)',
+        //   'rgba(255, 99, 132, 0.2)',
+        //   'rgba(54, 162, 235, 0.2)',
+        //   'rgba(255, 206, 86, 0.2)',
+    
+        // ],
+        borderColor:'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
+
+
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            precision: 0,
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+}
+/////////////////
