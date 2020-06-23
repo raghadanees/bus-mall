@@ -1,28 +1,7 @@
-'use strict';
-/*
-  - Randomly put 2 goats on the screen
-  - When a user clicks on any goat, both images change randomly
-  - After the user have a total of 5 clicks, stop the application from changing the images, and show results as following:
-    - How many times was each image displayed?
-    - How many times was each image clicked?
-  - Make sure left and right images are unique
-  - Prevent last picked goats from being picked
-*/
-
-
-/*
-1 - Images - object for each (constructor)
-2 - Array to contain all objects
-3 - Random number function
-4 - Global variable to track total clicks
-5 - event listeners
-*/
-
 var productsSection = document.getElementById('all_products');
 var allProducts = [];
 var totalClicks = 0;
 var productsName = [];
-var storProduct = document.getElementById('divProducts') ///////////line for 13
 
 
 var leftImage = document.getElementById('left_product_img');
@@ -44,7 +23,6 @@ function ProductPicture(name, url) {
   this.timesShown = 0;
   allProducts.push(this);
   productsName.push(this.name);
-  
 }
 
 new ProductPicture('bag', 'images/bag.jpg');
@@ -67,6 +45,10 @@ new ProductPicture('unicorn', 'images/unicorn.jpg');
 new ProductPicture('usb', 'images/usb.gif');
 new ProductPicture('water-can', 'images/water-can.jpg');
 new ProductPicture('wine-glass', 'images/wine-glass.jpg');
+
+
+
+
 
 // all products [img1, img2, img3, img4,......., img20]
 function displayRandomImages() {
@@ -100,17 +82,11 @@ function displayRandomImages() {
   middleImage.setAttribute('src', currentMiddleImage.url);
   rightImage.setAttribute('src', currentRightImage.url);
 
-//currentLeftImage.timesShown = Number(localStorage.getItem(currentLeftImage.name+ ' timesOfShown'));     
+
   currentLeftImage.timesShown += 1;
-localStorage.setItem(currentLeftImage.name+ ' timeOfShown', currentLeftImage.timesShown);
-
-//currentMiddleImage.timesShown = Number(localStorage.getItem(currentMiddleImage.name+ ' timesOfShown'));
   currentMiddleImage.timesShown += 1;
-localStorage.setItem(currentMiddleImage.name+ ' timeOfShown', currentMiddleImage.timesShown);
-
-  //currentRightImage.timesShown = Number(localStorage.getItem(currentRightImage.name+ ' timesOfShown'));
   currentRightImage.timesShown += 1;
-localStorage.setItem(currentRightImage.name+ ' timeOfShown', currentRightImage.timesShown);
+
 }
 
 function generateRandomNumber(forbiddenIndex) {
@@ -144,72 +120,60 @@ function handleProductClick(event) {
       totalClicks++;
 
       if (clickedElementId === 'left_product_img') {
-       // currentLeftImage.numberOfClicks = Number(localStorage.getItem(currentLeftImage.name));
         currentLeftImage.numberOfClicks += 1;
-        localStorage.setItem(currentLeftImage, currentLeftImage.numberOfClicks);
       }
 
       if (clickedElementId === 'middle_product_img') {
-        //currentMiddleImage.numberOfClicks = Number(localStorage.getItem(currentMiddleImage.name));
         currentMiddleImage.numberOfClicks += 1;
-        localStorage.setItem(currentMiddleImage, currentMiddleImage.numberOfClicks);
       }
-
 
       if (clickedElementId === 'right_product_img') {
-       // currentRightImage.numberOfClicks = Number(localStorage.getItem(currentRightImage.name));
         currentRightImage.numberOfClicks += 1;
-        localStorage.setItem(currentRightImage, currentRightImage.numberOfClicks);
       }
+
+
 
       displayRandomImages();
     }
   } else {
-    //add a code to display results
+    // add a code to display results
     var resultsList = document.getElementById('finalResult');
 
     for (var i = 0; i < allProducts.length; i++) {
       var listItem = document.createElement('li');
       listItem.textContent = allProducts[i].name + ' had ' + allProducts[i].numberOfClicks + ' votes , and was shown ' + allProducts[i].timesShown + ' times';
-      resultsList.appendChild(listItem);
+      //resultsList.appendChild(listItem);
     }
 
-    localStorage.setItem('AllProducts', JSON.stringify(allProducts));
-    console.log(JSON.parse(localStorage.getItem('AllProducts')));
-
-    allProducts = JSON.parse(localStorage.getItem('AllProducts'));
+    drawResultChart()
 
     productsSection.removeEventListener('click', handleProductClick);
-    drawResultChart();
   }
 }
 
 
 //...............................
 
-// var allClicks = [];
-// var allTimesShown = [];
+
+
 
 function drawResultChart() {
 
   var allClicks = [];
-  var allTimesShown = [];
-
   for (var i = 0; i < allProducts.length; i++) {
     allClicks.push(allProducts[i].numberOfClicks);
   }
 
-  // console.log('allclicks',allClicks);
+  console.log(allClicks);
+
+  var allTimesShown = [];
+  for (var i = 0; i < allProducts.length; i++) {
+    allTimesShown.push(allProducts[i].timesShown);
+    //console.log(allTimesShown);
+  }
 
   
-
-  for (var j = 0; j < allProducts.length; j++) {
-    allTimesShown.push(allProducts[j].timesShown);
-    
-  }
-  // console.log('allTimesShown' ,allTimesShown);
-
-
+  
 
   var ctx = document.getElementById('myChart')//.getContext('2d');
   var myChart = new Chart(ctx, {
@@ -220,8 +184,14 @@ function drawResultChart() {
         label: '# of Clicks',
         data: allClicks,
         backgroundColor: "#da84c4",
-        borderColor: 'rgba(255, 99, 132, 1)',
-      
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+        ],
         borderWidth: 1
       },
       {
@@ -250,12 +220,11 @@ function drawResultChart() {
         //   'rgba(255, 99, 132, 0.2)',
         //   'rgba(54, 162, 235, 0.2)',
         //   'rgba(255, 206, 86, 0.2)',
-
+    
         // ],
-        borderColor: 'rgba(255, 99, 132, 1)',
+        borderColor:'rgba(255, 99, 132, 1)',
         borderWidth: 1
-      }
-    ]
+      }]
 
 
     },
@@ -271,8 +240,3 @@ function drawResultChart() {
     }
   });
 }
-
-
-/////////////////
-/// Lab 13
-
