@@ -22,7 +22,7 @@ var productsSection = document.getElementById('all_products');
 var allProducts = [];
 var totalClicks = 0;
 var productsName = [];
-var storProduct = document.getElementById('divProducts') ///////////line for 13
+//var storProduct = document.getElementById('divProducts') ///////////line for 13
 
 
 var leftImage = document.getElementById('left_product_img');
@@ -45,6 +45,10 @@ function ProductPicture(name, url) {
   allProducts.push(this);
   productsName.push(this.name);
   
+}
+
+if(localStorage.getItem('AllProducts')){
+  allProducts=JSON.parse(localStorage.getItem('AllProducts')); //////////////////////////////////////////////////////////
 }
 
 new ProductPicture('bag', 'images/bag.jpg');
@@ -168,16 +172,16 @@ function handleProductClick(event) {
     //add a code to display results
     var resultsList = document.getElementById('finalResult');
 
-    for (var i = 0; i < allProducts.length; i++) {
-      var listItem = document.createElement('li');
-      listItem.textContent = allProducts[i].name + ' had ' + allProducts[i].numberOfClicks + ' votes , and was shown ' + allProducts[i].timesShown + ' times';
-      resultsList.appendChild(listItem);
-    }
+    // for (var i = 0; i < allProducts.length; i++) {
+    //   var listItem = document.createElement('li');
+    //   listItem.textContent = allProducts[i].name + ' had ' + allProducts[i].numberOfClicks + ' votes , and was shown ' + allProducts[i].timesShown + ' times';
+    //   resultsList.appendChild(listItem);
+    // }
 
     localStorage.setItem('AllProducts', JSON.stringify(allProducts));
-    console.log(JSON.parse(localStorage.getItem('AllProducts')));
+   // console.log(JSON.parse(localStorage.getItem('AllProducts')));
 
-    allProducts = JSON.parse(localStorage.getItem('AllProducts'));
+    //allProducts = JSON.parse(localStorage.getItem('AllProducts'));//////////
 
     productsSection.removeEventListener('click', handleProductClick);
     drawResultChart();

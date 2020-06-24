@@ -25,6 +25,11 @@ function ProductPicture(name, url) {
   productsName.push(this.name);
 }
 
+if(localStorage.getItem('products')){
+  allProducts=JSON.parse(localStorage.getItem('products')); //////////////////////////////////////////////////////////
+}
+console.log(localStorage)
+
 new ProductPicture('bag', 'images/bag.jpg');
 new ProductPicture('banana', 'images/banana.jpg');
 new ProductPicture('bathroom', 'images/bathroom.jpg');
@@ -134,6 +139,7 @@ function handleProductClick(event) {
 
 
       displayRandomImages();
+      storeProduct (); //////////////////////////////////////////////////////////////////////////
     }
   } else {
     // add a code to display results
@@ -239,4 +245,8 @@ function drawResultChart() {
       }
     }
   });
+}
+
+function storeProduct (){
+  localStorage.setItem('products',JSON.stringify(allProducts)); ////////////////////////////////////////////////////
 }
